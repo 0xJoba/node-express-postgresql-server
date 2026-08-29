@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: node-api
-          image: node-express-postgresql-server:latest
+          image: ghcr.io/0xjoba/node-express-postgresql-server:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
