@@ -3,3 +3,4 @@ logfile
 node_modules/
 
 .env
+actions-runner/
