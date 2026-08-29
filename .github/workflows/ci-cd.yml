@@ -35,3 +35,19 @@ jobs:
         run: |
           docker push ghcr.io/0xjoba/node-express-postgresql-server:${{ github.sha }}
           docker push ghcr.io/0xjoba/node-express-postgresql-server:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/node-api \
+            node-api=ghcr.io/0xjoba/node-express-postgresql-server:${{ github.sha }}
+
+      - name: Wait for rollout
+        run: kubectl rollout status deployment/node-api
