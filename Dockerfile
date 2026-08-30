@@ -18,4 +18,6 @@ COPY . .
 
 EXPOSE 3000
 
+USER node
+
 CMD ["./node_modules/.bin/babel-node", "src/index.js"]

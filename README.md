@@ -660,6 +660,7 @@ kubectl rollout status deployment/node-api
 * Kubernetes configuration is stored as declarative manifests.
 * The PostgreSQL database is exposed internally through a ClusterIP Service rather than externally.
 * The deployment uses a commit-specific Docker image tag rather than relying exclusively on `latest`.
+* The Node.js container runs as the non-root `node` user to follow the principle of least privilege.
 
 ---
 
