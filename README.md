@@ -56,7 +56,7 @@ GitHub Actions
               │
               ▼
              GHCR
-              │
+              │ Image Pull
               ▼
    Self-hosted GitHub Actions Runner
               │
