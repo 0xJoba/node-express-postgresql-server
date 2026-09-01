@@ -56,11 +56,11 @@ GitHub Actions
               │
               ▼
              GHCR
-              │ Image Pull
+              │ Image Available
               ▼
    Self-hosted GitHub Actions Runner
               │
-              │ kubectl
+              │ kubectl set image
               ▼
       Docker Desktop Kubernetes
               │
@@ -275,12 +275,11 @@ localhost:30588
 
 The assigned NodePort may differ depending on the Kubernetes configuration, so use `kubectl get svc node-api` to verify the current port.
 
-Test the API:
+Test the API using the assigned NodePort:
 
 ```bash
-curl http://localhost:30588/users
+curl http://localhost:<NODEPORT>/users
 ```
-
 ---
 
 ## PostgreSQL — ClusterIP
