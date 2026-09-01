@@ -32,7 +32,9 @@ REST API endpoints for:
 
 # Architecture
 
-The application uses Docker for containerization, GitHub Container Registry for storing images, GitHub Actions for CI/CD, and Docker Desktop Kubernetes for the local Kubernetes environment.
+[svg](https://github.com/0xJoba/node-express-postgresql-server/blob/main/README.md#architecture)
+
+The application uses Docker for containerization, GitHub Container Registry (GHCR) for storing Docker images, GitHub Actions for CI/CD, and Docker Desktop Kubernetes for the local Kubernetes environment.
 
 ```text
 Developer
@@ -56,29 +58,92 @@ GitHub Actions
               │
               ▼
              GHCR
-              │ Image Available
-              ▼
-   Self-hosted GitHub Actions Runner
               │
-              │ kubectl set image
-              ▼
-      Docker Desktop Kubernetes
+              │ Image available
               │
-        ┌─────┴──────────────┐
-        │                    │
-        ▼                    ▼
-     Node API             PostgreSQL
-    Deployment            Deployment
-        │                    │
-        ▼                    ▼
-   NodePort Service       ClusterIP
-        │                    │
-        └─────────┐    ┌─────┘
-                  ▼    ▼
-                API ↔ Database
-                       │
-                       ▼
-                      PVC
+              └──────────────────────────────┐
+                                             │
+   Self-hosted GitHub Actions Runner         │
+              │                              │
+              │ kubectl set image            │
+              ▼                              │
+      Docker Desktop Kubernetes              │
+              │                              │
+        ┌─────┴──────────────┐               │
+        │                    │               │
+        ▼                    ▼               │
+     Node API             PostgreSQL         │
+    Deployment            Deployment         │
+        │                    │               │
+        ▼                    ▼               │
+     Node API            PostgreSQL          │
+        Pod                  Pod              │
+        │                    │               │
+        ▼                    ▼               │
+   NodePort Service       ClusterIP Service  │
+        │                    │               │
+        └─────────┐    ┌─────┘               │
+                  ▼    ▼                     │
+                API ↔ Database               │
+                       │                     │
+                       ▼                     │
+                      PVC                    │
+                                             │
+              Kubernetes pulls the image     │
+              from GHCR when required ───────┘
+```
+
+### Application Flow
+
+```text
+Node API Pod
+     │
+     │ database connection
+     ▼
+PostgreSQL Service
+     │
+     ▼
+PostgreSQL Pod
+     │
+     ▼
+PVC
+```
+
+### Deployment Flow
+
+```text
+Developer
+    │
+    │ git push
+    ▼
+GitHub
+    │
+    ▼
+GitHub Actions
+    │
+    ├── Build Docker image
+    │
+    └── Push image to GHCR
+              │
+              ▼
+             GHCR
+
+GitHub Actions
+Self-hosted Runner
+    │
+    │ kubectl set image
+    ▼
+Kubernetes Deployment
+    │
+    ▼
+Kubernetes Pod
+    │
+    │ pulls image when required
+    ▼
+GHCR
+```
+
+The self-hosted runner does not transfer the Docker image to Kubernetes. It uses `kubectl` to update the Kubernetes Deployment with the image reference. Kubernetes then pulls the specified image from GHCR when creating or updating the Node API Pod.
 ```
 
 ---
