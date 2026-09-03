@@ -725,6 +725,7 @@ kubectl rollout status deployment/node-api
 * The PostgreSQL database is exposed internally through a ClusterIP Service rather than externally.
 * The deployment uses a commit-specific Docker image tag rather than relying exclusively on `latest`.
 * The Node.js container runs as the non-root `node` user to follow the principle of least privilege.
+* Automatic ServiceAccount token mounting is disabled for the Node.js Pod because the application does not require access to the Kubernetes API.
 
 ---
 
