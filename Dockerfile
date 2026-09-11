@@ -1,4 +1,4 @@
-# Stage 1: Install dependencies
+# Stage 1: Install dependencies here
 FROM node:20-alpine AS dependencies
 
 WORKDIR /app
