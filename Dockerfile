@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm ci
 
 
-# Stage 2: Create the final image
+# Stage 2: Create the final runtime image
 FROM node:20-alpine
 
 WORKDIR /app
